@@ -1,46 +1,82 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 
 export default function ProductForm({
   _id,
   title: existingTitle,
   description: existingDescription,
   price: existingPrice,
-  images,
+  images: existingImages,
+  category:existingCategory,
+  properties:assignedProperties,
 }) {
+  const [category, setCategory] = useState(existingCategory || "");
+  const [productProperties,setProductProperties] = useState(assignedProperties || {});
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [price, setPrice] = useState(existingPrice || "");
+  const [images, setImages] = useState(existingImages || []);
+  const [newImages, setNewImages] = useState([]);
   const [goToProducts, setGoToProducts] = useState(false);
+  const [categories, setCategories] = useState([]);
   const router = useRouter();
+
+  useEffect(() => {
+    axios.get('/api/categories').then(result => {
+      setCategories(result.data);
+    })
+  }, []);
+
   async function saveProduct(e) {
     e.preventDefault();
-    const data = { title, description, price };
-    if (_id) {
-      //update
-      await axios.put("/api/products", { ...data, _id });
-    } else {
-      //create
-      await axios.post("/api/products", data);
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("category", category);
+    formData.append("properties", productProperties);
+
+    for (const image of newImages) {
+      formData.append("images", image);
     }
-    setGoToProducts(true);
+   
+    try {
+      if (_id) {
+        await axios.put('/api/products', formData);
+      } else {
+        await axios.post('/api/products', formData);
+      }
+      setGoToProducts(true);
+    } catch (error) {
+      console.error('Error saving product:', error);
+    }
+  }
+  function handleImageUpload(e) {
+    const files = Array.from(e.target.files);
+    setNewImages(files);
+    setImages((prevImages) => [...prevImages, ...files.map((file) => URL.createObjectURL(file))]);
   }
   if (goToProducts) {
     router.push("/products");
   }
-  async function uploadImages(e){
-    const files = e.target?.files;
-    if(files?.length > 0) {
-      const data = new FormData();
-      for(const file of files){
-        data.append('file', file);
-      }
-      const res = await fetch('/api/upload',{
-        method: 'POST',
-        body: data,
-      })
-      console.log(res);
+function setProductProp(propName, value){
+  setProductProperties(p => {
+    const newProductProps = {...p};
+    newProductProps[propName] = value;
+    return newProductProps;
+  })
+}
+  const propertiesToFill = [];
+  if(categories.length > 0 && category){
+    let catInfo = categories.find(({_id}) => _id === category)
+    propertiesToFill.push(...catInfo.properties);
+    while(catInfo?.parent?._id) {
+      const parentCat = categories.find(({_id}) => _id === 
+      catInfo?.parent?._id);
+      propertiesToFill.push(...parentCat.properties);
+      catInfo = parentCat;
     }
   }
   return (
@@ -52,8 +88,30 @@ export default function ProductForm({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+      <label>Category</label>
+      <select value={category} onChange={e => setCategory(e.target.value)}>
+      <option value="">Uncategorized</option>
+      {categories.length > 0 && categories.map(c => (
+        <option value={c._id}>{c.name}</option>
+      )
+
+      )}
+      </select>
+      {propertiesToFill.length > 0 && propertiesToFill.map(p => (
+        <div className="flex gap-1">{p.name}
+        <select 
+        value={productProperties[p.name]} 
+        onChange={(e) => 
+          setProductProp(p.name,e.target.value)
+        }>
+          {p.values.map(v => (
+            <option value={v}>{v}</option>
+          ))}
+        </select>
+        </div>
+))}
       <label>Photos</label>
-      <div className="mb-2">
+      <div className="flex gap-1 mb-2">
         <label className="w-24 h-24 cursor-pointer text-center flex items-center justify-center text-sm gap-1 text-gray-500 rounded-lg bg-gray-200">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -70,9 +128,19 @@ export default function ProductForm({
             />
           </svg>
           Upload
-          <input type="file" onChange={uploadImages} className="hidden" />
+          <input name="images" type="file" multiple className="hidden" onChange={handleImageUpload} />
         </label>
-        {!images?.length && <div>No photos in this product</div>}
+          <div className="flex gap-2 rounded-lg">
+            {images.map((image, index) => (
+              <div key={index} className="h-24 w-24 relative">
+                <img
+                  src={image}
+                  alt={`Image ${index + 1}`}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            ))}
+          </div>
       </div>
       <label>description</label>
       <textarea

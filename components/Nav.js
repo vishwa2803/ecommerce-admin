@@ -1,13 +1,18 @@
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 export default function Nav() {
   const inactiveLink = "flex gap-1 p-1";
-  const activeLink = inactiveLink + " bg-white text-blue-900 rounded-l-lg";
+  const activeLink = inactiveLink + " bg-white text-blue-900 rounded-md";
   const router = useRouter();
   const { pathname } = router;
+  async function logout(){
+    await router.push('/');
+    await signOut();
+  }
   return (
-    <aside className="text-white p-4 pr-0">
+    <aside className="text-white p-4 ">
       <Link href={"/"} className="flex gap-1 mb-4 mr-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +31,10 @@ export default function Nav() {
         <span className="">EcommerceAdmin</span>
       </Link>
       <nav className="flex flex-col gap-2">
-        <Link href={"/"} className={pathname === '/' ? activeLink : inactiveLink}>
+        <Link
+          href={"/"}
+          className={pathname === "/" ? activeLink : inactiveLink}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -43,8 +51,11 @@ export default function Nav() {
           </svg>
           Dashboard
         </Link>
-        
-        <Link href={"products/"} className={pathname.includes('/products')? activeLink : inactiveLink}>
+
+        <Link
+          href={"/products"}
+          className={pathname.includes("/products") ? activeLink : inactiveLink}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -61,7 +72,32 @@ export default function Nav() {
           </svg>
           Products
         </Link>
-        <Link href={"/orders"} className={pathname.includes('/orders')? activeLink : inactiveLink}>
+        <Link
+          href={"/categories"}
+          className={
+            pathname.includes("/categories") ? activeLink : inactiveLink
+          }
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+            />
+          </svg>
+          Categories
+        </Link>
+        <Link
+          href={"/orders"}
+          className={pathname.includes("/orders") ? activeLink : inactiveLink}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -78,7 +114,10 @@ export default function Nav() {
           </svg>
           Orders
         </Link>
-        <Link href={"/setting"} className={pathname.includes('/settings')? activeLink : inactiveLink}>
+        <Link
+          href={"/setting"}
+          className={pathname.includes("/settings") ? activeLink : inactiveLink}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -100,6 +139,23 @@ export default function Nav() {
           </svg>
           Settings
         </Link>
+        <button onClick={logout} className={inactiveLink}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75"
+            />
+          </svg>
+          Logout
+        </button>
       </nav>
     </aside>
   );
