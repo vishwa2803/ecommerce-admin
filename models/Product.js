@@ -6,10 +6,11 @@ const ProductSchema = new mongoose.Schema({
   description:  { type: String, required: true },
   category: {type: Id ,ref: 'productModel', required: true},
   price: {type: Number, required: true},
-
   images: [{ type: String }],
   properties: {type: Object},
-})
+},{
+  timestamps: true,
+});
 
 
 const productModel =mongoose.models.products || mongoose.model('products', ProductSchema);

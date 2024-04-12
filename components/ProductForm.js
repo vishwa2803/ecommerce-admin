@@ -36,7 +36,7 @@ export default function ProductForm({
     formData.append("description", description);
     formData.append("price", price);
     formData.append("category", category);
-    formData.append("properties", productProperties);
+    formData.append("properties", JSON.stringify(productProperties));
 
     for (const image of newImages) {
       formData.append("images", image);
@@ -44,7 +44,7 @@ export default function ProductForm({
    
     try {
       if (_id) {
-        await axios.put('/api/products', formData);
+        await axios.put(`/api/products?id=${_id}`, formData); // Include product ID in the URL
       } else {
         await axios.post('/api/products', formData);
       }
@@ -92,23 +92,23 @@ function setProductProp(propName, value){
       <select value={category} onChange={e => setCategory(e.target.value)}>
       <option value="">Uncategorized</option>
       {categories.length > 0 && categories.map(c => (
-        <option value={c._id}>{c.name}</option>
-      )
+    <option key={c._id} value={c._id}>{c.name}</option>
+  )
 
       )}
       </select>
       {propertiesToFill.length > 0 && propertiesToFill.map(p => (
-        <div className="flex gap-1">{p.name}
-        <select 
-        value={productProperties[p.name]} 
-        onChange={(e) => 
-          setProductProp(p.name,e.target.value)
-        }>
-          {p.values.map(v => (
-            <option value={v}>{v}</option>
-          ))}
-        </select>
-        </div>
+  <div key={p.name} className="flex gap-1">
+    <label>{p.name}</label> {/* Display property name */}
+    <select 
+      value={productProperties[p.name]} 
+      onChange={(e) => setProductProp(p.name, e.target.value)}
+    >
+      {p.values.map(v => (
+        <option key={v} value={v}>{v}</option>
+      ))}
+    </select>
+  </div>
 ))}
       <label>Photos</label>
       <div className="flex gap-1 mb-2">
