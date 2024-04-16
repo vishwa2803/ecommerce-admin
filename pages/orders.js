@@ -29,12 +29,15 @@ export default function OrderPage(){
                             .toLocaleString()}
                         </td>
                         <td className={order.paid ? 'text-green-600' : 'text-red-600'}>
-                           {order.paid ? 'YES' : 'NO'} 
+                           {order.paid ? ' YES ' : ' NO '} 
                         </td>
                         <td>
-                            {order.name} {order.email}<br/>
-                            {order.city} {order.postalCode}
-                            {order.country}<br/> {order.streetAddress}
+                            <b>Name: </b>{order.name}<br/> 
+                            <b>Email: </b>{order.email}<br/>
+                            <b>City: </b>{order.city} <br/>
+                            <b>PostalCode: </b> {order.postalCode}<br/>
+                            <b>Country: </b>{order.country}<br/> 
+                            <b>Address: </b>{order.streetAddress}
                         </td>
                         <td>
                             {order.line_items.map(l => (

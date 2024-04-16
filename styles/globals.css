@@ -33,6 +33,7 @@ table.basic{
 table.basic thead tr td{
     @apply bg-blue-100;
 }
+
 table.basic thead tr th{
     @apply bg-blue-100;
 }
