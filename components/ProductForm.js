@@ -33,6 +33,7 @@ export default function ProductForm({
     e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
+    formData.append("id", _id);
     formData.append("description", description);
     formData.append("price", price);
     formData.append("category", category);
@@ -50,7 +51,9 @@ export default function ProductForm({
       }
       setGoToProducts(true);
     } catch (error) {
+      setGoToProducts(false);
       console.error('Error saving product:', error);
+      
     }
   }
   function handleImageUpload(e) {

@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     }
   }
   if (method === "POST") {
-    await upload.array('images')(req, res, async (err) => {
+    upload.array('images')(req, res, async (err) => {
       if (err) {
         console.error('Error uploading images:', err);
         res.status(500).json({ error: 'Error uploading images' });
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
 
   if (method === "PUT") {
     try {
-      await upload.array('images')(req, res, async (err) => {
+      upload.array('images')(req, res, async (err) => {
         if (err) {
           console.error('Error uploading images:', err);
           res.status(500).json({ error: 'Error uploading images' });
@@ -63,37 +63,32 @@ export default async function handler(req, res) {
         
         const { title, category, description, price, properties, id } = req.body;
         const images = req.files.map((file) => `/uploads/${file.originalname}`);
+        
+        if (!id) {
+          res.status(400).json({ error: 'Product ID is required for updating' });
+          return;
+        }
   
-        // Construct the update object
-        const updateObject = {
-          title,
-          description,
-          price,
-          images,
-          properties,
-          category
-        };
-  
-        // Update the product
-        const updatedProduct = await productModel.findOneAndUpdate(
-          { id },
-          updateObject,
-          { new: true } // Return the updated document
+        const updatedProduct = await productModel.findByIdAndUpdate(
+          id,
+          { title, description, price, images, properties, category },
+          { new: true } // Set to true to return the updated document
         );
   
         if (!updatedProduct) {
-          // Handle case where no document was found with the given _id
           res.status(404).json({ error: 'Product not found' });
           return;
         }
   
         res.json(updatedProduct);
+        console.log("Product updated successfully");
       });
     } catch (error) {
       console.error('Error updating product:', error);
       res.status(500).json({ error: 'Error updating product' });
     }
   }
+  
   
   if (method === "DELETE") {
     if (req.query?.id) {

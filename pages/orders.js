@@ -43,10 +43,12 @@ export default function OrderPage(){
                             {order.line_items.map(l => (
                                 <>
                                 {l.price_data?.product_data.name} x {l.quantity}<br />
+                                <b>Amount: </b>{l.price_data?.unit_amount}<br />
                                 {/* {JSON.stringify(l)}<br /> */}
                                 </>
                             ))}
                         </td>
+                        
                     </tr>
                 ))}
                 </tbody>
