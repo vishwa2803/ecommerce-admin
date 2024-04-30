@@ -32,17 +32,33 @@ await isAdminRequest(req,res);
     res.json(await categoryModel.find().populate("parent"));
   }
   if (method === "PUT") {
-    const { name, parentCategory, properties, _id } = req.body;
-    const categoryDoc = await categoryModel.updateOne(
-      { _id },
-      {
+    try {
+      const { name, parentCategory, properties, _id } = req.body;
+  
+      const updateObject = {
         name,
-        parent: parentCategory,
         properties,
+      };
+  
+      if (parentCategory !== "") {
+        updateObject.parent = parentCategory;
       }
-    );
-    res.json(categoryDoc);
+      else {
+        updateObject.parent = null;
+      }
+  
+      const categoryDoc = await categoryModel.updateOne(
+        { _id },
+        updateObject
+      );
+  
+      res.json(categoryDoc);
+    } catch (error) {
+      console.error("Error updating category:", error);
+      res.status(500).json({ message: "Error updating category" });
+    }
   }
+  
 
   if (method === "DELETE") {
     const { _id } = req.query;
