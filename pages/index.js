@@ -132,15 +132,15 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 my-5 gap-4">
-        <div className="bg-blue-100 border border-gray-200 rounded-lg shadow p-4">
+        <div className="bg-blue-50 border border-gray-200 rounded-lg shadow p-4">
           <h5 className="mb-2 font-semibold text-2xl text-blue-900">Total Products: {productCount}</h5>
           <Link href="/products" className="text-blue-600 hover:underline">View</Link>
         </div>
-        <div className="bg-blue-100 border border-gray-200 rounded-lg shadow p-4">
+        <div className="bg-blue-50 border border-gray-200 rounded-lg shadow p-4">
           <h5 className="mb-2 font-semibold text-2xl text-blue-900">Total Categories: {categoryCount}</h5>
           <Link href="/categories" className="text-blue-600 hover:underline">View</Link>
         </div>
-        <div className="bg-blue-100 border border-gray-200 rounded-lg shadow p-4">
+        <div className="bg-blue-50 border border-gray-200 rounded-lg shadow p-4">
           <h5 className="mb-2 font-semibold text-2xl text-blue-900">All Orders: {orderCount}</h5>
           <Link href="/orders" className=" text-blue-600 hover:underline">View</Link>
         </div>
@@ -150,7 +150,7 @@ export default function Home() {
         <div className="w-full md:w-3/5 bg-gray-50 border border-gray-200 rounded-lg shadow">
           <h1 className="p-4 text-2xl font-semibold text-blue-900">Filled Line Chart</h1>
           <div className="p-4">
-            <canvas id="myChart"></canvas>
+            <canvas id="myChart" className="text-blue-900"></canvas>
           </div>
         </div>
         <div className="w-full md:w-2/5 bg-gray-50 border border-gray-200 rounded-lg shadow">

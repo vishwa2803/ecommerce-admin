@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import axios from "axios";
 import { withSwal } from "react-sweetalert2";
 import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 function CategoriesPage({ swal }) {
   const [currentCategory, setCurrentCategory] = useState(null);
@@ -33,10 +34,14 @@ function CategoriesPage({ swal }) {
       await axios.put("/api/categories", { ...data, _id: currentCategory._id });
       setIsEditing(false);
       setCurrentCategory(null);
+      toast.success("Category edited successfully");
+
     } else {
       const response = await axios.post("/api/categories", data);
       setCurrentCategory(response.data);
       setIsEditing(null);
+      toast.success("Category added successfully");
+
     }
     setName("");
     setParentCategory("");
@@ -105,6 +110,7 @@ function CategoriesPage({ swal }) {
   }
   return (
     <Layout>
+      <Toaster/>
       <h1>Categories</h1>
       <label>
         {isEditing
@@ -118,6 +124,7 @@ function CategoriesPage({ swal }) {
             onChange={(e) => setName(e.target.value)}
             type="text"
             placeholder={"Category name"}
+            required="true"
           />
           <select
             className=" bg-white"
