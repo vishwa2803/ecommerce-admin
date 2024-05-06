@@ -15,10 +15,10 @@ export default function OrderPage(){
             <table className="basic">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Paid</th>
-                        <th>Recipient</th>
-                        <th>Products</th>
+                        <td><b>Date</b></td>
+                        <td><b>Paid</b></td>
+                        <td><b>Recipient</b></td>
+                        <td><b>Products</b></td>
                     </tr>
                 </thead>
                 <tbody>

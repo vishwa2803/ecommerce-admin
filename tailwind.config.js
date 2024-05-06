@@ -15,7 +15,12 @@ module.exports = {
         highlight: '#eae8fb',
         bgGray: '#fbfafd'
       },
+      spacing: {
+        '128': '32rem',
+      },
+    
     },
   },
   plugins: [],
+  
 }
