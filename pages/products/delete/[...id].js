@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function DeleteProductPage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function DeleteProductPage() {
     router.push("/products");
   }
   async function deleteProduct() {
+    toast.success("Product deleted successfully")
     await axios.delete('/api/products?id='+id);
     goBack();
   }
@@ -33,6 +35,7 @@ export default function DeleteProductPage() {
         No
       </button>
       </div>
+      <Toaster/>
     </Layout>
   );
 }
